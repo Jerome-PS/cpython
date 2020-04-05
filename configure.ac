@@ -3727,6 +3727,21 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
   [AC_MSG_RESULT(no)
 ])
 
+AC_MSG_CHECKING(if clock_gettime is mandatory but missing)
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[
+#if defined(MS_WINDOWS)
+#elif defined(__APPLE__)
+#elif defined(__hpux)
+#else
+#if !defined(HAVE_CLOCK_GETTIME)
+It's just a flesh wound!
+#endif
+#endif
+]])],
+  [AC_MSG_RESULT(no)],
+  [AC_MSG_ERROR([could not find clock_gettime (see https://bugs.python.org/issue40174)])
+])
+
 # On some systems (eg. FreeBSD 5), we would find a definition of the
 # functions ctermid_r, setgroups in the library, but no prototype
 # (e.g. because we use _XOPEN_SOURCE). See whether we can take their
